@@ -59,3 +59,4 @@ target/
 # Additional files for sharding_project
 
 setvars.sh
+db.sqlite3
