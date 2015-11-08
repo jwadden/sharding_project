@@ -55,3 +55,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Additional files for sharding_project
+
+setvars.sh
