@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
+from django_sharding_library.settings_helpers import database_configs
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -38,6 +40,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_sharding',
+    'shard_user',
+    'blog_post',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -75,14 +79,29 @@ WSGI_APPLICATION = 'sharding_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'SHARD_GROUP': None,
-        'PRIMARY': None,
-    }
-}
+DATABASES = database_configs(databases_dict={
+	'unsharded_databases': [
+        {
+            'name': 'default',
+            'environment_variable': 'DATABASE_URL',
+            'default_database_url': 'sqlite:///%s' % os.path.join(BASE_DIR, 'db_default.sqlite3'),
+        }
+    ],
+    'sharded_databases': [
+        {
+            'name': 'app_shard_001',
+            'environment_variable': 'SHARD_001_DATABASE_URL',
+            'default_database_url': 'sqlite:///%s' % os.path.join(BASE_DIR, 'db_shard1.sqlite3'),
+            'shard_group': 'shard_blog',
+        },
+        {
+            'name': 'app_shard_002',
+            'environment_variable': 'SHARD_002_DATABASE_URL',
+            'default_database_url': 'sqlite:///%s' % os.path.join(BASE_DIR, 'db_shard2.sqlite3'),
+            'shard_group': 'shard_blog',
+        },
+    ]
+})
 
 
 # Internationalization
@@ -103,3 +122,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Most applications will not need additional routers but if you need your own then
+# remember that order does matter. Read up on them here (link).
+DATABASE_ROUTERS=['django_sharding_library.router.ShardedRouter']
+
+AUTH_USER_MODEL = 'shard_user.User'
