@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-	<h1>Blog Posts</h1>
-	{% for shard, objects in blog_posts.items %}
-	<h2>{{ shard }}</h2>
-		{% for blog_post in objects %}
-		<dl>
-			<dt>Title:</dt>
-			<dd>{{ blog_post.title }}</dd>
-			<dt>Author:</dt>
-			<dd>{{ blog_post.author }}</dd>
-			<dt>Content:</dt>
-			<dd>{{ blog_post.text|linebreaks }}</dd>
-		</dl>
-		{% endfor %}
-	{% endfor %}
+    <h1>Blog Posts</h1>
+    {% for shard, objects in blog_posts.items %}
+    <h2>{{ shard }}</h2>
+        {% for blog_post in objects %}
+        <dl>
+            <dt>Title:</dt>
+            <dd>{{ blog_post.title }}</dd>
+            <dt>Author:</dt>
+            <dd>{{ blog_post.author }}</dd>
+            <dt>Content:</dt>
+            <dd>{{ blog_post.text|linebreaks }}</dd>
+        </dl>
+        {% endfor %}
+    {% endfor %}
 {% endblock %}
